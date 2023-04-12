@@ -1,0 +1,2 @@
+module WebChatsHelper
+end

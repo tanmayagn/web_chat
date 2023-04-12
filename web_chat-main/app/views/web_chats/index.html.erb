@@ -1,0 +1,138 @@
+<!-- <script>
+  const appConfig = {
+      accountSid:"AC44c5a45ea7bbd1817a58465cab10e83d",
+      flexFlowSid:"FObb4186abac61f8c51448c53912611458"
+  };
+  Twilio.FlexWebChat.createWebChat(appConfig).then(webchat => {
+      const { manager } = webchat;
+      
+      Twilio.FlexWebChat.Actions.on("afterStartEngagement", (payload) => {
+          const { question } = payload.formData;
+          if (!question)
+              return;
+
+          const { channelSid } = manager.store.getState().flex.session;
+          manager
+              .chatClient.getChannelBySid(channelSid)
+              .then(channel => channel.sendMessage(question));
+      });
+      manager.strings.WelcomeMessage = "New text for welcome message";
+      webchat.init();
+    });
+
+  // Twilio.FlexWebChat.renderWebChat(appConfig);
+</script> -->
+
+
+
+
+
+<script>
+  const appConfig = {
+      accountSid:"AC44c5a45ea7bbd1817a58465cab10e83d",
+      flexFlowSid:"FObb4186abac61f8c51448c53912611458"
+  };
+  Twilio.FlexWebChat.createWebChat(appConfig).then(webchat => {
+      const { manager } = webchat;
+      
+      Twilio.FlexWebChat.Actions.on("afterStartEngagement", (payload) => {
+          const { question } = payload.formData;
+
+          if (!question)
+              return;
+
+          const { channelSid } = manager.store.getState().flex.session;
+            // question  = payload.formData;
+
+          // check if the user entered an IP address
+          if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(question)) {
+            const apiKey = "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"; // replace with your Google Maps API key
+            
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${question}&key=${apiKey}`)
+              .then(response => response.json())
+              .then(data => {
+                const location = data.results[0].geometry.location;
+                const latitude = location.lat;
+                const longitude = location.lng;
+                
+                // construct the Google Maps URL
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+                
+                // send the Google Maps URL as a message in the chat
+                manager.chatClient
+                  .getChannelBySid(channelSid)
+                  .then(channel => channel.sendMessage(mapsUrl));
+              });
+          } else {
+            // send the user's question as a message in the chat
+            manager.chatClient
+              .getChannelBySid(channelSid)
+              .then(channel => channel.sendMessage(question));
+          }
+
+      });
+      manager.strings.WelcomeMessage = "New text for welcome message";
+      webchat.init();
+    });
+
+  // Twilio.FlexWebChat.renderWebChat(appConfig);
+</script>
+
+
+
+
+
+
+
+<script>
+
+  // const appConfig = {
+  //     accountSid:"AC44c5a45ea7bbd1817a58465cab10e83d",
+  //     flexFlowSid:"FObb4186abac61f8c51448c53912611458"
+  // };
+  // Twilio.FlexWebChat.createWebChat(appConfig).then(webchat => {
+  //     const { manager } = webchat;
+      
+  //     Twilio.FlexWebChat.Actions.on("afterStartEngagement", (payload) => {
+  //         const { question } = payload.formData;
+  //         if (!question)
+  //             return;
+
+  //         const { channelSid } = manager.store.getState().flex.session;
+  //         manager
+  //             .chatClient.getChannelBySid(channelSid)
+  //             .then(channel => channel.sendMessage(question));
+  //     });
+  //     manager.strings.WelcomeMessage = "New text for welcome message";
+  //     webchat.init();
+  //   });
+
+// const inputField = document.querySelector('input');
+// inputField.addEventListener('input', () => {
+//   const inputValue = inputField.value;
+//   if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(inputValue)) {
+//     alert('You entered an IP address!');
+//   }
+// });
+
+// const inputBox = document.querySelector('.css-85s8ih');
+
+// const elements = document.querySelectorAll('.css-85s8ih');
+// for (let i = 0; i < document.querySelectorAll('.css-85s8ih').length; i++) {
+//   document.querySelectorAll('.css-85s8ih')[i].addEventListener('click', function() {
+//     debugger;
+//     // Code to execute when element is clicked
+//   });
+// }
+// debugger;
+// const chatClient = new Twilio.Chat.Client(token);
+
+// chatClient.on('.css-85s8ih', function(channel) {
+//   const inputBox = document.querySelector('.css-85s8ih');
+//   inputBox.addEventListener('click', function() {
+//     // your custom JavaScript code here
+//   });
+// });
+  // Twilio.FlexWebChat.renderWebChat(appConfig);
+</script>
+
